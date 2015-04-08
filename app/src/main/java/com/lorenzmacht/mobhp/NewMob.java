@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 
 public class NewMob extends ActionBarActivity {
@@ -42,14 +44,14 @@ public class NewMob extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //Something tells me this is very wrong, this method is supposed to take the text in editText
-    //and send it to the main activity, where it will print a TextView with that text.
     public void returnToMain(View view){
+        //Takes the editText, puts it into monsterName which is not being used since I first
+        //want to check if it even works.
         EditText editText = (EditText) findViewById(R.id.edit_monster);
         String monsterName = editText.getText().toString();
         Intent intent = new Intent(this, Main.class);
-        intent.putExtra("methodName", "printMob");
         intent.putExtra("monsterName", monsterName);
-        startActivity(intent);
+        setResult(1001, intent);
+        finish();
     }
 }

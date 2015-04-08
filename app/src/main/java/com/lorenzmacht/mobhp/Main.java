@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,10 +19,8 @@ public class Main extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+        printMob();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -44,28 +43,42 @@ public class Main extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     //This method will open a window to create a new mob
     public void newMob(View view){
         //Defining an Intent to open NewMob.class
         Intent intent = new Intent(this, NewMob.class);
-        startActivity(intent);
+        startActivityForResult(intent, 100);
     }
-    protected void onNewIntent(Intent intent){
 
+    //This is listening for a new intent to catch its extra so it knows it has to execute printMob
+    /* Commenting out because I'm using onActivityResult()
+    @Override
+    protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    if(intent.getStringExtra("methodName").equals("printMob")){
+    setIntent(intent);
+    if(intent.getStringExtra("methodName").equals("printMob")) {
         printMob();
+        }
+    }
+    */
+
+    protected void onActivityResult(int requestCode, int returnCode, Intent intent) {
+        if(requestCode==100) {
+            String monsterName = intent.getStringExtra("monsterName");
+            if(returnCode==1001 && monsterName != null) {
+                printMob();
+            }
+        }
     }
 
-    }
 
     //This method will print the mobs on the main screen
     public void printMob(){
 
+        //Making a string with the name of the monster
         Intent intent = getIntent();
         String monsterName = intent.getStringExtra("monsterName");
-        //TO-DO1: Create a variable that cathes the text in the EditText and adds it to the created
-        //textview.
 
         //Creating a RelativeLayout inside the layout with 'android:id=@+id/rootlayout'
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.rootlayout);
@@ -75,4 +88,6 @@ public class Main extends ActionBarActivity {
         textView.setText(monsterName);
         linearLayout.addView(textView);
     }
+
+
 }
