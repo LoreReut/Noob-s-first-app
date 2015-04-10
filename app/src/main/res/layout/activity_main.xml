@@ -9,9 +9,19 @@
 
     <Button
         android:layout_gravity="center"
-        android:text="New Mob"
+        android:text="Create Mobs"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:onClick="newMob"/>
-
+        android:onClick="openMobActivity"/>
+    <RelativeLayout
+        android:id="@+id/draggedmobsarea"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+    <LinearLayout
+        android:id="@+id/mobsarea"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
