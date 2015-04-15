@@ -1,12 +1,13 @@
 package com.lorenzmacht.mobhp;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,8 +20,8 @@ public class Main extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        printMob();
-    }
+
+        }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -44,49 +45,54 @@ public class Main extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //This method will open a window to create a new mob
-    public void newMob(View view){
-        //Defining an Intent to open NewMob.class
+    // This method will open a window to create a new mob
+    public void openMobActivity(View view){
+        // Defining an Intent to open NewMob.class
         Intent intent = new Intent(this, NewMob.class);
         startActivityForResult(intent, 100);
     }
 
-    //This is listening for a new intent to catch its extra so it knows it has to execute printMob
-    /* Commenting out because I'm using onActivityResult()
-    @Override
-    protected void onNewIntent(Intent intent) {
-    super.onNewIntent(intent);
-    setIntent(intent);
-    if(intent.getStringExtra("methodName").equals("printMob")) {
-        printMob();
-        }
-    }
-    */
-
     protected void onActivityResult(int requestCode, int returnCode, Intent intent) {
         if(requestCode==100) {
             String monsterName = intent.getStringExtra("monsterName");
-            if(returnCode==1001 && monsterName != null) {
-                printMob();
+            String monsterMaxHP = intent.getStringExtra("monsterMaxHP");
+            if(returnCode == 1001 && monsterName != null && monsterMaxHP != null) {
+
+                // Creating a RelativeLayout inside the layout with 'android:id=@+id/rootlayout'
+                LinearLayout mobsArea = (LinearLayout) findViewById(R.id.mobsarea);
+                LinearLayout mobArea = new LinearLayout(this);
+                mobArea.setOrientation(LinearLayout.VERTICAL);
+                LayoutParams mobsAreaParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+                mobsArea.addView(mobArea, mobsAreaParams);
+                // Inside of it I create a TextView ('this' is the context, can also getContext(); or smth)
+                TextView textMonsterName = new TextView(this);
+                textMonsterName.setText(monsterName);
+                mobArea.addView(textMonsterName);
+                // Another TextView for the HP
+                TextView textMonsterMaxHP = new TextView(this);
+                textMonsterMaxHP.setText(monsterMaxHP);
+                mobArea.addView(textMonsterMaxHP);
+                mobArea.setTag("Mob");
+
+                /* Dragging in the makings
+                mobArea.setOnLongClickListener(new View.OnLongClickListener() {
+
+                                               public boolean onLongClick(View v){
+
+                                               Item.ClipData item = new Item.Clipdata(v.getTag());
+                                               ClipData dragData = new ClipData(v.getTag(), ClipData.MIMETYPE_TEXT_PLAIN, item);
+                                               View.DragShadowBuilder myShadow = new MyDragShadowBuilder(mobArea);
+                                               v.startDrag(dragData, myShadow, null, 0);
+
+                                                   }
+
+                                               }
+                );
+                 */
+
+
             }
         }
-    }
-
-
-    //This method will print the mobs on the main screen
-    public void printMob(){
-
-        //Making a string with the name of the monster
-        Intent intent = getIntent();
-        String monsterName = intent.getStringExtra("monsterName");
-
-        //Creating a RelativeLayout inside the layout with 'android:id=@+id/rootlayout'
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.rootlayout);
-
-        //Inside of it I create a textView ('this' is the context, can also getContext(); or smth)
-        TextView textView = new TextView(this);
-        textView.setText(monsterName);
-        linearLayout.addView(textView);
     }
 
 

@@ -44,13 +44,18 @@ public class NewMob extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void returnToMain(View view){
+    public void returnToMain(View view) {
         //Takes the editText, puts it into monsterName which is not being used since I first
-        //want to check if it even works.
-        EditText editText = (EditText) findViewById(R.id.edit_monster);
-        String monsterName = editText.getText().toString();
+        //want to check if it even works. Same with monsterMaxHP.
+        EditText editName = (EditText) findViewById(R.id.monster_name);
+        String monsterName = editName.getText().toString();
+        EditText editHP = (EditText) findViewById(R.id.monster_MaxHP);
+        String monsterMaxHP = editHP.getText().toString();
+
         Intent intent = new Intent(this, Main.class);
         intent.putExtra("monsterName", monsterName);
+        intent.putExtra("monsterMaxHP", monsterMaxHP);
+        //Using setResult so onActivityResult can detect it
         setResult(1001, intent);
         finish();
     }
