@@ -2,6 +2,11 @@ package com.lorenzmacht.mobhp;
 
 import android.content.ClipData;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,7 +16,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 
 public class Main extends ActionBarActivity {
 
@@ -46,14 +50,37 @@ public class Main extends ActionBarActivity {
     }
 
     // This method will open a window to create a new mob
-    public void openMobActivity(View view){
+    public void openMobActivity(View view) {
+
         // Defining an Intent to open NewMob.class
         Intent intent = new Intent(this, NewMob.class);
         startActivityForResult(intent, 100);
+
+    }
+
+    //It creates a drag shadow for dragging a TextView as a small gray rectangle
+    private static class MyDragShadowBuilder extends View.DragShadowBuilder {
+
+        private static Drawable shadow;
+        public MyDragShadowBuilder (View v) {
+
+            super(v);
+            shadow = new ColorDrawable(Color.LTGRAY);
+
+        }
+        public void onProvideShadowMetrics (Point size, Point touch) {
+
+            int width, height;
+            width = getView().getWidth() / 2;
+
+        }
+
     }
 
     protected void onActivityResult(int requestCode, int returnCode, Intent intent) {
+
         if(requestCode==100) {
+
             String monsterName = intent.getStringExtra("monsterName");
             String monsterMaxHP = intent.getStringExtra("monsterMaxHP");
             if(returnCode == 1001 && monsterName != null && monsterMaxHP != null) {
@@ -73,26 +100,28 @@ public class Main extends ActionBarActivity {
                 textMonsterMaxHP.setText(monsterMaxHP);
                 mobArea.addView(textMonsterMaxHP);
                 mobArea.setTag("Mob");
-
-                /* Dragging in the makings
                 mobArea.setOnLongClickListener(new View.OnLongClickListener() {
 
-                                               public boolean onLongClick(View v){
+                    public boolean onLongClick(View v) {
 
-                                               Item.ClipData item = new Item.Clipdata(v.getTag());
-                                               ClipData dragData = new ClipData(v.getTag(), ClipData.MIMETYPE_TEXT_PLAIN, item);
-                                               View.DragShadowBuilder myShadow = new MyDragShadowBuilder(mobArea);
-                                               v.startDrag(dragData, myShadow, null, 0);
+                        ClipData.Item item = new ClipData.Item(v.getTag());
+                        ClipData dragData = new ClipData(v.getTag(), ClipData.MIMETYPE_TEXT_PLAIN, item);
+                        View.DragShadowBuilder myShadow = new MyDragShadowBuilder(mobArea);
+                        v.startDrag (
+                            dragData,
+                            myShadow,
+                            null,
+                            0
+                        );
 
-                                                   }
+                    }   //Stop giving this error you motherfucker
 
-                                               }
-                );
-                 */
-
+               });
 
             }
+
         }
+
     }
 
 
