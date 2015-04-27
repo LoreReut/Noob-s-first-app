@@ -72,7 +72,14 @@ public class Main extends ActionBarActivity {
 
             int width, height;
             width = getView().getWidth() / 2;
+            height = getView().getHeight() / 2;
+            shadow.setBounds(0, 0, width, height);
+            size.set(width,height);
+            touch.set(width/2, height/2);
 
+        }
+        public void onDrawShadow (Canvas canvas) {
+            shadow.draw(canvas);
         }
 
     }
@@ -87,7 +94,7 @@ public class Main extends ActionBarActivity {
 
                 // Creating a RelativeLayout inside the layout with 'android:id=@+id/rootlayout'
                 LinearLayout mobsArea = (LinearLayout) findViewById(R.id.mobsarea);
-                LinearLayout mobArea = new LinearLayout(this);
+                final LinearLayout mobArea = new LinearLayout(this);
                 mobArea.setOrientation(LinearLayout.VERTICAL);
                 LayoutParams mobsAreaParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 mobsArea.addView(mobArea, mobsAreaParams);
@@ -104,8 +111,11 @@ public class Main extends ActionBarActivity {
 
                     public boolean onLongClick(View v) {
 
-                        ClipData.Item item = new ClipData.Item(v.getTag());
+                        //Guide sait v.getTag(), but since it needs a text type thing, I needed toString() it
+                        ClipData.Item item = new ClipData.Item(v.getTag().toString());
+                        //Once MIMETYPE_TEXT_PLAIN is called technically this error should stop existing
                         ClipData dragData = new ClipData(v.getTag(), ClipData.MIMETYPE_TEXT_PLAIN, item);
+                        //If I don't make mobArea final the following line will give me an error, something tells me I shouldn't be doing this
                         View.DragShadowBuilder myShadow = new MyDragShadowBuilder(mobArea);
                         v.startDrag (
                             dragData,
