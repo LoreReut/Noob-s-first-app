@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +20,12 @@ import android.widget.TextView;
 
 public class Main extends ActionBarActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
         }
 
@@ -71,8 +73,8 @@ public class Main extends ActionBarActivity {
         public void onProvideShadowMetrics (Point size, Point touch) {
 
             int width, height;
-            width = getView().getWidth() / 2;
-            height = getView().getHeight() / 2;
+            width = getView().getWidth();
+            height = getView().getHeight();
             shadow.setBounds(0, 0, width, height);
             size.set(width,height);
             touch.set(width/2, height/2);
@@ -128,7 +130,16 @@ public class Main extends ActionBarActivity {
 
                });
 
+
             }
+
+        }
+
+    }
+
+    protected class myDragEventListener implements View.OnDragListener {
+
+        public boolean onDrag(View v, DragEvent event) {
 
         }
 
