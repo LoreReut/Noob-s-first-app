@@ -116,10 +116,10 @@ public class Main extends ActionBarActivity {
 
                     public boolean onLongClick(View v) {
 
-                        //Guide sait v.getTag(), but since it needs a text type thing, I needed toString() it
+                        //Guide said v.getTag(), but since it needs a text type thing, I needed toString() it
                         ClipData.Item item = new ClipData.Item(v.getTag().toString());
                         //Once MIMETYPE_TEXT_PLAIN is called technically this error should stop existing
-                        ClipData dragData = new ClipData(v.getTag(), ClipDescription.MIMETYPE_TEXT_PLAIN, item);
+                        ClipData dragData = new ClipData((CharSequence) v.getTag(), new String[] {ClipDescription.MIMETYPE_TEXT_PLAIN}, item);
                         //If I don't make mobArea final the following line will give me an error, something tells me I shouldn't be doing this
                         View.DragShadowBuilder myShadow = new MyDragShadowBuilder(mobArea);
                         v.startDrag (
@@ -149,9 +149,14 @@ public class Main extends ActionBarActivity {
 
                 case DragEvent.ACTION_DRAG_STARTED:
                     if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                        v.setColorFilter(Color.BLUE);
+
+                        v.setBackgroundColor(Color.BLUE);
+                        v.invalidate();
+                        return true;
 
                 }
+                case DragEvent.ACTION_DRAG_ENTERED:
+
 
             }
 
