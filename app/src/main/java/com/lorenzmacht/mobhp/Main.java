@@ -1,6 +1,7 @@
 package com.lorenzmacht.mobhp;
 
 import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -109,6 +110,8 @@ public class Main extends ActionBarActivity {
                 textMonsterMaxHP.setText(monsterMaxHP);
                 mobArea.addView(textMonsterMaxHP);
                 mobArea.setTag("Mob");
+                View.OnDragListener mDragListen = new myDragEventListener();
+                mobArea.setOnDragListener(mDragListen);
                 mobArea.setOnLongClickListener(new View.OnLongClickListener() {
 
                     public boolean onLongClick(View v) {
@@ -116,7 +119,7 @@ public class Main extends ActionBarActivity {
                         //Guide sait v.getTag(), but since it needs a text type thing, I needed toString() it
                         ClipData.Item item = new ClipData.Item(v.getTag().toString());
                         //Once MIMETYPE_TEXT_PLAIN is called technically this error should stop existing
-                        ClipData dragData = new ClipData(v.getTag(), ClipData.MIMETYPE_TEXT_PLAIN, item);
+                        ClipData dragData = new ClipData(v.getTag(), ClipDescription.MIMETYPE_TEXT_PLAIN, item);
                         //If I don't make mobArea final the following line will give me an error, something tells me I shouldn't be doing this
                         View.DragShadowBuilder myShadow = new MyDragShadowBuilder(mobArea);
                         v.startDrag (
@@ -140,6 +143,17 @@ public class Main extends ActionBarActivity {
     protected class myDragEventListener implements View.OnDragListener {
 
         public boolean onDrag(View v, DragEvent event) {
+
+            final int action = event.getAction();
+            switch(action){
+
+                case DragEvent.ACTION_DRAG_STARTED:
+                    if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                        v.setColorFilter(Color.BLUE);
+
+                }
+
+            }
 
         }
 
