@@ -1,7 +1,7 @@
 package com.lorenzmacht.mobhp;
 
-import android.content.ClipData;
 import android.content.ClipDescription;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,10 +10,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -23,10 +26,12 @@ public class Main extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.draggedmobsarea);
+        View.OnDragListener mRelativeDragListener = new myDragEventListener();
+        relativeLayout.setOnDragListener(mRelativeDragListener);
 
         }
 
@@ -105,14 +110,26 @@ public class Main extends ActionBarActivity {
                 TextView textMonsterName = new TextView(this);
                 textMonsterName.setText(monsterName);
                 mobArea.addView(textMonsterName);
+                mobArea.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
                 // Another TextView for the HP
                 TextView textMonsterMaxHP = new TextView(this);
                 textMonsterMaxHP.setText(monsterMaxHP);
                 mobArea.addView(textMonsterMaxHP);
                 mobArea.setTag("Mob");
-                View.OnDragListener mDragListen = new myDragEventListener();
-                mobArea.setOnDragListener(mDragListen);
-                mobArea.setOnLongClickListener(new View.OnLongClickListener() {
+
+                mobArea.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent me) {
+                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+                        final int action = me.getAction();
+                        switch (action) {
+                            case MotionEvent.ACTION_UP:
+                        }
+                    }
+
+                });
+                
+                /** Commented out because I'm gonna use mobArea.setOnTouchListener mobArea.setOnLongClickListener(new View.OnLongClickListener() {
 
                     public boolean onLongClick(View v) {
 
@@ -128,10 +145,11 @@ public class Main extends ActionBarActivity {
                             null,
                             0
                         );
+                        return false;
 
                     }   //Stop giving this error you motherfucker
 
-               });
+                });**/
 
 
             }
@@ -145,20 +163,63 @@ public class Main extends ActionBarActivity {
         public boolean onDrag(View v, DragEvent event) {
 
             final int action = event.getAction();
+            float posX;
+            float posY;
             switch(action){
 
                 case DragEvent.ACTION_DRAG_STARTED:
                     if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-
                         v.setBackgroundColor(Color.BLUE);
                         v.invalidate();
                         return true;
-
-                }
+                    }
+                    ClipData.Item startedItem = event.getClipData().getItemAt(0);
+                    String startedDragData = startedItem.getText().toString();
+                    Log.e("Started dragging data: ", startedDragData);
                 case DragEvent.ACTION_DRAG_ENTERED:
+                    v.setBackgroundColor(Color.GREEN);
+                    v.invalidate();
+                    return true;
+                case DragEvent.ACTION_DRAG_LOCATION:
+                    //Updating the log with the current position of the event
+                    posX = event.getX();
+                    posY = event.getY();
+                    Log.e("Object dragged", Float.toString(posX) + " " + Float.toString(posY));
 
+                case DragEvent.ACTION_DROP:
+                    // Getting X and Y from the event
+                    posX = event.getX();
+                    posY = event.getY();
+                    Log.e("Object dropped", Float.toString(posX) + " " + Float.toString(posY));
+                    // Until here
+                    ClipData.Item droppedItem = event.getClipData().getItemAt(0);
+                    String droppedDragData = droppedItem.getText().toString();
+                    Log.e("Dropped data:", droppedDragData);
+                    v.setBackgroundColor(Color.WHITE);
+
+                    /** Doesn't work
+                     *  mobArea.setX(posX);
+                     *  mobArea.setY(posY);
+                     */
+                    v.invalidate();
+                    return true;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    v.setBackgroundColor(Color.BLUE);
+                    v.invalidate();
+                    return true;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    if (event.getResult()) {
+                        Log.e("Drag successful", "event.getResult() returned true.");
+                    }
+                    else {
+                        Log.e("Drag unsuccessful", "event.getResult() returned false.");
+                    }
+                    return true;
+                default:
+                    Log.e("Invalid drag action:", "Doesn't fit any of the drag event cases.");
 
             }
+            return false;
 
         }
 
