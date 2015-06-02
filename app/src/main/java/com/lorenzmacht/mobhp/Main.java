@@ -116,7 +116,6 @@ public class Main extends ActionBarActivity {
                 textMonsterMaxHP.setText(monsterMaxHP);
                 mobArea.addView(textMonsterMaxHP);
                 mobArea.setTag("Mob");
-
                 mobArea.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent me) {
@@ -130,6 +129,7 @@ public class Main extends ActionBarActivity {
                 });
                 
                 /** Commented out because I'm gonna use mobArea.setOnTouchListener mobArea.setOnLongClickListener(new View.OnLongClickListener() {
+
 
                     public boolean onLongClick(View v) {
 
