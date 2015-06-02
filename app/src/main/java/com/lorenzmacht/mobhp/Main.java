@@ -14,7 +14,9 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -114,7 +116,20 @@ public class Main extends ActionBarActivity {
                 textMonsterMaxHP.setText(monsterMaxHP);
                 mobArea.addView(textMonsterMaxHP);
                 mobArea.setTag("Mob");
-                mobArea.setOnLongClickListener(new View.OnLongClickListener() {
+                mobArea.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent me) {
+                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+                        final int action = me.getAction();
+                        switch (action) {
+                            case MotionEvent.ACTION_UP:
+                        }
+                    }
+
+                });
+                
+                /** Commented out because I'm gonna use mobArea.setOnTouchListener mobArea.setOnLongClickListener(new View.OnLongClickListener() {
+
 
                     public boolean onLongClick(View v) {
 
@@ -134,7 +149,7 @@ public class Main extends ActionBarActivity {
 
                     }   //Stop giving this error you motherfucker
 
-               });
+                });**/
 
 
             }
