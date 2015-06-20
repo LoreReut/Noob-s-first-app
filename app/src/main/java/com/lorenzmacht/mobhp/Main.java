@@ -14,8 +14,11 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout.LayoutParams;
+import android.widget.FrameLayout;
+//import android.widget.LinearLayout.LayoutParams;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,10 +30,14 @@ public class Main extends ActionBarActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.draggedmobsarea);
-        View.OnDragListener mRelativeDragListener = new myDragEventListener();
-        relativeLayout.setOnDragListener(mRelativeDragListener);
 
+        /** ...I don't really know what this does anymore
+         *
+        FrameLayout relativeLayout = (FrameLayout) findViewById(R.id.draggedmobsarea);
+        View.OnDragListener mRelativeDragListener = new myDragEventListener();
+        // relativeLayout.setOnDragListener(mRelativeDragListener);
+
+         */
         }
 
     @Override
@@ -99,22 +106,50 @@ public class Main extends ActionBarActivity {
             if(returnCode == 1001 && monsterName != null && monsterMaxHP != null) {
 
                 // Creating a RelativeLayout inside the layout with 'android:id=@+id/rootlayout'
-                LinearLayout mobsArea = (LinearLayout) findViewById(R.id.mobsarea);
+                //TODO: Put this LinearLayout somewhere else bitch
+                // Commenting out because I'm spawning it in a FrameLayout instead LinearLayout mobsArea = (LinearLayout) findViewById(R.id.mobsarea);
+                final FrameLayout draggedMobsArea = (FrameLayout) findViewById(R.id.draggedmobsarea);
                 final LinearLayout mobArea = new LinearLayout(this);
-                mobArea.setOrientation(LinearLayout.VERTICAL);
-                LayoutParams mobsAreaParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-                mobsArea.addView(mobArea, mobsAreaParams);
+                // Commented out because this was linear layout before mobArea.setOrientation(LinearLayout.VERTICAL);
+                LayoutParams mobAreaParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                draggedMobsArea.addView(mobArea, mobAreaParams);
                 // Inside of it I create a TextView ('this' is the context, can also getContext(); or smth)
                 TextView textMonsterName = new TextView(this);
                 textMonsterName.setText(monsterName);
                 mobArea.addView(textMonsterName);
-                mobArea.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                // TEST mobArea.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
                 // Another TextView for the HP
                 TextView textMonsterMaxHP = new TextView(this);
                 textMonsterMaxHP.setText(monsterMaxHP);
                 mobArea.addView(textMonsterMaxHP);
                 mobArea.setTag("Mob");
-                mobArea.setOnLongClickListener(new View.OnLongClickListener() {
+                mobArea.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent me) {
+                        LayoutParams params = (LayoutParams) view.getLayoutParams();
+                        int action = me.getAction();
+                        switch (action) {
+                            case MotionEvent.ACTION_MOVE:
+                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop()*2);
+                                params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2);
+                                view.setLayoutParams(params);
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop()*2);
+                                params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2);
+                                view.setLayoutParams(params);
+                                break;
+                            case MotionEvent.ACTION_DOWN:
+                                view.setLayoutParams(params);
+                                break;
+                        }
+                        return true;
+                    }
+
+                });
+                
+                /** Commented out because I'm gonna use mobArea.setOnTouchListener mobArea.setOnLongClickListener(new View.OnLongClickListener() {
+
 
                     public boolean onLongClick(View v) {
 
@@ -134,7 +169,7 @@ public class Main extends ActionBarActivity {
 
                     }   //Stop giving this error you motherfucker
 
-               });
+                });**/
 
 
             }
