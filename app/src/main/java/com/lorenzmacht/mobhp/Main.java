@@ -135,10 +135,12 @@ public class Main extends ActionBarActivity {
                                 view.setLayoutParams(params);
                                 break;
                             case MotionEvent.ACTION_UP:
+
                                 params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop()*2);
                                 params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2);
                                 view.setLayoutParams(params);
                                 break;
+
                             case MotionEvent.ACTION_DOWN:
                                 view.setLayoutParams(params);
                                 break;
