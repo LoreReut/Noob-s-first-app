@@ -17,7 +17,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout.LayoutParams;
+//import android.widget.LinearLayout.LayoutParams;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -29,10 +30,14 @@ public class Main extends ActionBarActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.draggedmobsarea);
-        View.OnDragListener mRelativeDragListener = new myDragEventListener();
-        relativeLayout.setOnDragListener(mRelativeDragListener);
 
+        /** ...I don't really know what this does anymore
+         *
+        FrameLayout relativeLayout = (FrameLayout) findViewById(R.id.draggedmobsarea);
+        View.OnDragListener mRelativeDragListener = new myDragEventListener();
+        // relativeLayout.setOnDragListener(mRelativeDragListener);
+
+         */
         }
 
     @Override
@@ -101,16 +106,18 @@ public class Main extends ActionBarActivity {
             if(returnCode == 1001 && monsterName != null && monsterMaxHP != null) {
 
                 // Creating a RelativeLayout inside the layout with 'android:id=@+id/rootlayout'
-                LinearLayout mobsArea = (LinearLayout) findViewById(R.id.mobsarea);
+                //TODO: Put this LinearLayout somewhere else bitch
+                // Commenting out because I'm spawning it in a FrameLayout instead LinearLayout mobsArea = (LinearLayout) findViewById(R.id.mobsarea);
+                final FrameLayout draggedMobsArea = (FrameLayout) findViewById(R.id.draggedmobsarea);
                 final LinearLayout mobArea = new LinearLayout(this);
-                mobArea.setOrientation(LinearLayout.VERTICAL);
-                LayoutParams mobsAreaParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-                mobsArea.addView(mobArea, mobsAreaParams);
+                // Commented out because this was linear layout before mobArea.setOrientation(LinearLayout.VERTICAL);
+                LayoutParams mobAreaParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                draggedMobsArea.addView(mobArea, mobAreaParams);
                 // Inside of it I create a TextView ('this' is the context, can also getContext(); or smth)
                 TextView textMonsterName = new TextView(this);
                 textMonsterName.setText(monsterName);
                 mobArea.addView(textMonsterName);
-                mobArea.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                // TEST mobArea.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
                 // Another TextView for the HP
                 TextView textMonsterMaxHP = new TextView(this);
                 textMonsterMaxHP.setText(monsterMaxHP);
@@ -119,17 +126,17 @@ public class Main extends ActionBarActivity {
                 mobArea.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent me) {
-                        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
-                        final int action = me.getAction();
+                        LayoutParams params = (LayoutParams) view.getLayoutParams();
+                        int action = me.getAction();
                         switch (action) {
-                            case MotionEvent.ACTION_UP:
-                                params.topMargin = (int) me.getRawY() - view.getHeight();
+                            case MotionEvent.ACTION_MOVE:
+                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop()*2);
                                 params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2);
                                 view.setLayoutParams(params);
                                 break;
-                            case MotionEvent.ACTION_MOVE:
-                                params.topMargin = (int) me.getRawX() - view.getHeight();
-                                params.leftMargin = (int) me.getRawY() - (view.getWidth() / 2);
+                            case MotionEvent.ACTION_UP:
+                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop()*2);
+                                params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2);
                                 view.setLayoutParams(params);
                                 break;
                             case MotionEvent.ACTION_DOWN:
@@ -141,30 +148,6 @@ public class Main extends ActionBarActivity {
 
                 });
                 
-                /** Commented out because I'm gonna use mobArea.setOnTouchListener mobArea.setOnLongClickListener(new View.OnLongClickListener() {
-
-
-                    public boolean onLongClick(View v) {
-
-                        //Guide said v.getTag(), but since it needs a text type thing, I needed toString() it
-                        ClipData.Item item = new ClipData.Item(v.getTag().toString());
-                        //Once MIMETYPE_TEXT_PLAIN is called technically this error should stop existing
-                        ClipData dragData = new ClipData((CharSequence) v.getTag(), new String[] {ClipDescription.MIMETYPE_TEXT_PLAIN}, item);
-                        //If I don't make mobArea final the following line will give me an error, something tells me I shouldn't be doing this
-                        View.DragShadowBuilder myShadow = new MyDragShadowBuilder(mobArea);
-                        v.startDrag (
-                            dragData,
-                            myShadow,
-                            null,
-                            0
-                        );
-                        return false;
-
-                    }   //Stop giving this error you motherfucker
-
-                });**/
-
-
             }
 
         }
