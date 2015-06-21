@@ -148,30 +148,6 @@ public class Main extends ActionBarActivity {
 
                 });
                 
-                /** Commented out because I'm gonna use mobArea.setOnTouchListener mobArea.setOnLongClickListener(new View.OnLongClickListener() {
-
-
-                    public boolean onLongClick(View v) {
-
-                        //Guide said v.getTag(), but since it needs a text type thing, I needed toString() it
-                        ClipData.Item item = new ClipData.Item(v.getTag().toString());
-                        //Once MIMETYPE_TEXT_PLAIN is called technically this error should stop existing
-                        ClipData dragData = new ClipData((CharSequence) v.getTag(), new String[] {ClipDescription.MIMETYPE_TEXT_PLAIN}, item);
-                        //If I don't make mobArea final the following line will give me an error, something tells me I shouldn't be doing this
-                        View.DragShadowBuilder myShadow = new MyDragShadowBuilder(mobArea);
-                        v.startDrag (
-                            dragData,
-                            myShadow,
-                            null,
-                            0
-                        );
-                        return false;
-
-                    }   //Stop giving this error you motherfucker
-
-                });**/
-
-
             }
 
         }
