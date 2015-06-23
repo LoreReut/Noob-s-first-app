@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -113,16 +114,20 @@ public class Main extends ActionBarActivity {
                 // Commenting out because I'm spawning it in a FrameLayout instead LinearLayout mobsArea = (LinearLayout) findViewById(R.id.mobsarea);
                 final FrameLayout draggedMobsArea = (FrameLayout) findViewById(R.id.draggedmobsarea);
                 final LinearLayout mobArea = new LinearLayout(this);
+                final LinearLayout rootLayout = (LinearLayout) findViewById(R.id.rootlayout);
                 // Commented out because this was linear layout before mobArea.setOrientation(LinearLayout.VERTICAL);
                 LayoutParams mobAreaParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                 draggedMobsArea.addView(mobArea, mobAreaParams);
                 // Inside of it I create a TextView ('this' is the context, can also getContext(); or smth)
                 TextView textMonsterName = new TextView(this);
+                mobArea.setOrientation(LinearLayout.VERTICAL);
+                mobArea.setGravity(Gravity.CENTER);
                 textMonsterName.setText(monsterName);
                 mobArea.addView(textMonsterName);
                 // TEST mobArea.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
                 // Another TextView for the HP
                 TextView textMonsterMaxHP = new TextView(this);
+                textMonsterMaxHP.setGravity(Gravity.CENTER);
                 textMonsterMaxHP.setText(monsterMaxHP);
                 mobArea.addView(textMonsterMaxHP);
                 mobArea.setTag("Mob");
@@ -145,13 +150,13 @@ public class Main extends ActionBarActivity {
                         int action = me.getAction();
                         switch (action) {
                             case MotionEvent.ACTION_MOVE:
-                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop() + actionBarHeight);
-                                params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2);
+                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop() + actionBarHeight) - rootLayout.getPaddingBottom();
+                                params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2) - draggedMobsArea.getLeft();
                                 view.setLayoutParams(params);
                                 break;
                             case MotionEvent.ACTION_UP:
-                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop() + actionBarHeight);
-                                params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2);
+                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop() + actionBarHeight) - rootLayout.getPaddingBottom();
+                                params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2) - draggedMobsArea.getLeft();
                                 view.setLayoutParams(params);
                                 break;
                             case MotionEvent.ACTION_DOWN:
