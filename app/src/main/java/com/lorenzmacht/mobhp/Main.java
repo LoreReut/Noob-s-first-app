@@ -1,5 +1,6 @@
 package com.lorenzmacht.mobhp;
 
+import android.app.Activity;
 import android.content.ClipDescription;
 import android.content.ClipData;
 import android.content.Intent;
@@ -11,11 +12,13 @@ import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.FrameLayout;
 //import android.widget.LinearLayout.LayoutParams;
 import android.widget.FrameLayout.LayoutParams;
@@ -123,19 +126,31 @@ public class Main extends ActionBarActivity {
                 textMonsterMaxHP.setText(monsterMaxHP);
                 mobArea.addView(textMonsterMaxHP);
                 mobArea.setTag("Mob");
+
                 mobArea.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View view, MotionEvent me) {
+                        //Until the end of Else I'm retrieving the action bar height to substract it from the draggedMob
+                        TypedValue tv = new TypedValue();
+                        int actionBarHeight;
+                        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+                        {
+                            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+                        }
+                        else
+                        {
+                            actionBarHeight = 0;
+                        }
                         LayoutParams params = (LayoutParams) view.getLayoutParams();
                         int action = me.getAction();
                         switch (action) {
                             case MotionEvent.ACTION_MOVE:
-                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop()*2);
+                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop() + actionBarHeight);
                                 params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2);
                                 view.setLayoutParams(params);
                                 break;
                             case MotionEvent.ACTION_UP:
-                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop()*2);
+                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop() + actionBarHeight);
                                 params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2);
                                 view.setLayoutParams(params);
                                 break;
@@ -192,11 +207,6 @@ public class Main extends ActionBarActivity {
                     String droppedDragData = droppedItem.getText().toString();
                     Log.e("Dropped data:", droppedDragData);
                     v.setBackgroundColor(Color.WHITE);
-
-                    /** Doesn't work
-                     *  mobArea.setX(posX);
-                     *  mobArea.setY(posY);
-                     */
                     v.invalidate();
                     return true;
                 case DragEvent.ACTION_DRAG_EXITED:
