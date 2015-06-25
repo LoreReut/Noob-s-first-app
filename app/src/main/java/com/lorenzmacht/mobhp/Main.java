@@ -1,30 +1,18 @@
 package com.lorenzmacht.mobhp;
 
-import android.app.Activity;
-import android.content.ClipDescription;
-import android.content.ClipData;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.FrameLayout;
-//import android.widget.LinearLayout.LayoutParams;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class Main extends ActionBarActivity {
@@ -35,13 +23,6 @@ public class Main extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /** ...I don't really know what this does anymore
-         *
-        FrameLayout relativeLayout = (FrameLayout) findViewById(R.id.draggedmobsarea);
-        View.OnDragListener mRelativeDragListener = new myDragEventListener();
-        // relativeLayout.setOnDragListener(mRelativeDragListener);
-
-         */
         }
 
     @Override
@@ -72,32 +53,6 @@ public class Main extends ActionBarActivity {
         // Defining an Intent to open NewMob.class
         Intent intent = new Intent(this, NewMob.class);
         startActivityForResult(intent, 100);
-
-    }
-
-    //It creates a drag shadow for dragging a TextView as a small gray rectangle
-    private static class MyDragShadowBuilder extends View.DragShadowBuilder {
-
-        private static Drawable shadow;
-        public MyDragShadowBuilder (View v) {
-
-            super(v);
-            shadow = new ColorDrawable(Color.LTGRAY);
-
-        }
-        public void onProvideShadowMetrics (Point size, Point touch) {
-
-            int width, height;
-            width = getView().getWidth();
-            height = getView().getHeight();
-            shadow.setBounds(0, 0, width, height);
-            size.set(width,height);
-            touch.set(width/2, height/2);
-
-        }
-        public void onDrawShadow (Canvas canvas) {
-            shadow.draw(canvas);
-        }
 
     }
 
@@ -173,68 +128,5 @@ public class Main extends ActionBarActivity {
         }
 
     }
-
-    protected class myDragEventListener implements View.OnDragListener {
-
-        public boolean onDrag(View v, DragEvent event) {
-
-            final int action = event.getAction();
-            float posX;
-            float posY;
-            switch(action){
-
-                case DragEvent.ACTION_DRAG_STARTED:
-                    if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                        v.setBackgroundColor(Color.BLUE);
-                        v.invalidate();
-                        return true;
-                    }
-                    ClipData.Item startedItem = event.getClipData().getItemAt(0);
-                    String startedDragData = startedItem.getText().toString();
-                    Log.e("Started dragging data: ", startedDragData);
-                case DragEvent.ACTION_DRAG_ENTERED:
-                    v.setBackgroundColor(Color.GREEN);
-                    v.invalidate();
-                    return true;
-                case DragEvent.ACTION_DRAG_LOCATION:
-                    //Updating the log with the current position of the event
-                    posX = event.getX();
-                    posY = event.getY();
-                    Log.e("Object dragged", Float.toString(posX) + " " + Float.toString(posY));
-
-                case DragEvent.ACTION_DROP:
-                    // Getting X and Y from the event
-                    posX = event.getX();
-                    posY = event.getY();
-                    Log.e("Object dropped", Float.toString(posX) + " " + Float.toString(posY));
-                    // Until here
-                    ClipData.Item droppedItem = event.getClipData().getItemAt(0);
-                    String droppedDragData = droppedItem.getText().toString();
-                    Log.e("Dropped data:", droppedDragData);
-                    v.setBackgroundColor(Color.WHITE);
-                    v.invalidate();
-                    return true;
-                case DragEvent.ACTION_DRAG_EXITED:
-                    v.setBackgroundColor(Color.BLUE);
-                    v.invalidate();
-                    return true;
-                case DragEvent.ACTION_DRAG_ENDED:
-                    if (event.getResult()) {
-                        Log.e("Drag successful", "event.getResult() returned true.");
-                    }
-                    else {
-                        Log.e("Drag unsuccessful", "event.getResult() returned false.");
-                    }
-                    return true;
-                default:
-                    Log.e("Invalid drag action:", "Doesn't fit any of the drag event cases.");
-
-            }
-            return false;
-
-        }
-
-    }
-
 
 }
