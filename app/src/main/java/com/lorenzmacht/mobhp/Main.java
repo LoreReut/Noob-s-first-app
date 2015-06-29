@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.PopupWindow;
 
 public class Main extends ActionBarActivity {
 
@@ -62,7 +63,7 @@ public class Main extends ActionBarActivity {
 
             String monsterName = intent.getStringExtra("monsterName");
             String monsterMaxHP = intent.getStringExtra("monsterMaxHP");
-            if(returnCode == 1001 && monsterName != null && monsterMaxHP != null) {
+            if(returnCode == 1001 && !monsterName.equals(null) && monsterMaxHP != null) {
 
                 // Creating a RelativeLayout inside the layout with 'android:id=@+id/rootlayout'
                 //TODO: Put this LinearLayout somewhere else bitch
@@ -87,8 +88,17 @@ public class Main extends ActionBarActivity {
                 mobArea.addView(textMonsterMaxHP);
                 mobArea.setTag("Mob");
 
+                mobArea.setLongClickable(true);
+                mobArea.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        PopupWindow popup;
+                        LinearLayout popupLayout;
+                    }});
+
                 mobArea.setOnTouchListener(new View.OnTouchListener() {
                     @Override
+
                     public boolean onTouch(View view, MotionEvent me) {
                         //Until the end of Else I'm retrieving the action bar height to substract it from the draggedMob
                         TypedValue tv = new TypedValue();
