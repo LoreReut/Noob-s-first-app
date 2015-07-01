@@ -1,6 +1,8 @@
 package com.lorenzmacht.mobhp;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,9 +12,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.PopupWindow;
 
@@ -56,6 +60,24 @@ public class Main extends ActionBarActivity {
         startActivityForResult(intent, 100);
 
     }
+    //This prepares the content of the popup window that's gonna appear once I LongClick a mob
+    public void initPopup(String monsterName, String monsterHP){
+        PopupWindow popup;
+        TextView popupText;
+        Button closePopupButton;
+        SeekBar monsterHPChanger;
+
+        popupText = new TextView(this);
+        popupText.setText(monsterName);
+
+        monsterHPChanger = new SeekBar(this);
+        monsterHPChanger.setMax(Integer.parseInt(monsterHP));
+        monsterHPChanger.setProgress(monsterHPChanger.getMax());
+
+        closePopupButton = new Button(this);
+        closePopupButton.setText("Ok");
+
+    }
 
     protected void onActivityResult(int requestCode, int returnCode, Intent intent) {
 
@@ -64,9 +86,7 @@ public class Main extends ActionBarActivity {
             String monsterName = intent.getStringExtra("monsterName");
             String monsterMaxHP = intent.getStringExtra("monsterMaxHP");
             if(returnCode == 1001 && !monsterName.equals(null) && monsterMaxHP != null) {
-
                 // Creating a RelativeLayout inside the layout with 'android:id=@+id/rootlayout'
-                //TODO: Put this LinearLayout somewhere else bitch
                 // Commenting out because I'm spawning it in a FrameLayout instead LinearLayout mobsArea = (LinearLayout) findViewById(R.id.mobsarea);
                 final FrameLayout draggedMobsArea = (FrameLayout) findViewById(R.id.draggedmobsarea);
                 final LinearLayout mobArea = new LinearLayout(this);
@@ -92,8 +112,12 @@ public class Main extends ActionBarActivity {
                 mobArea.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        PopupWindow popup;
-                        LinearLayout popupLayout;
+
+                        mobArea.setBackgroundColor(Color.WHITE);
+                        initPopup(monsterName, monsterMaxHP);
+
+
+
                     }});
 
                 mobArea.setOnTouchListener(new View.OnTouchListener() {
@@ -137,6 +161,12 @@ public class Main extends ActionBarActivity {
 
         }
 
+    }
+
+    public void OnClick(View v) {
+        if (v.getId() == R.id.closePopup) {
+
+        }
     }
 
 }
