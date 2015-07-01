@@ -45,8 +45,7 @@ public class NewMob extends ActionBarActivity {
     }
 
     public void returnToMain(View view) {
-        //Takes the editText, puts it into monsterName which is not being used since I first
-        //want to check if it even works. Same with monsterMaxHP.
+        //Takes the editText, puts it into monsterName. Same with monsterMaxHP.
         EditText editName = (EditText) findViewById(R.id.monster_name);
         String monsterName = editName.getText().toString();
         EditText editHP = (EditText) findViewById(R.id.monster_MaxHP);
