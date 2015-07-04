@@ -61,7 +61,8 @@ public class Main extends ActionBarActivity {
 
     }
     //This prepares the content of the popup window that's gonna appear once I LongClick a mob
-    public void initPopup(String monsterName, String monsterHP){
+    public int initPopup(String monsterName, String monsterHP){
+        int monsterHPInt = Integer.parseInt(monsterHP);
         PopupWindow popup;
         TextView popupText;
         Button closePopupButton;
@@ -71,11 +72,26 @@ public class Main extends ActionBarActivity {
         popupText.setText(monsterName);
 
         monsterHPChanger = new SeekBar(this);
-        monsterHPChanger.setMax(Integer.parseInt(monsterHP));
-        monsterHPChanger.setProgress(monsterHPChanger.getMax());
+        monsterHPChanger.setMax(monsterHPInt);
+        /** Will only use if necessary
+         *  monsterHPChanger.setProgress(monsterHPChanger.getMax());
+         */
 
+        //Creating wrapper class to edit the monsterHP with the value of the SeekBar
+        final MonsterHP monsterHPObject = new MonsterHP(monsterHPInt, monsterHPChanger.getProgress());
         closePopupButton = new Button(this);
+        // TO-DO: Define the ID of this thing in a values.xml
+        closePopupButton.setId(R.id.closePopup);
         closePopupButton.setText("Ok");
+        closePopupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                monsterHPObject.update();
+            }
+        });
+
+        Log.println(1, "Method", "Returns " + monsterHPObject.getHP());
+        return monsterHPInt;
 
     }
 
@@ -110,12 +126,14 @@ public class Main extends ActionBarActivity {
 
                 mobArea.setLongClickable(true);
                 mobArea.setOnLongClickListener(new View.OnLongClickListener() {
+
                     @Override
                     public boolean onLongClick(View v) {
 
                         mobArea.setBackgroundColor(Color.WHITE);
-                        initPopup(monsterName, monsterMaxHP);
-
+                        //TO-DO: Encapsulation class out of all this bullshit below this line
+                        textMonsterMaxHP.setText(initPopup(monsterName, monsterMaxHP));
+                        return true;
 
 
                     }});
@@ -165,6 +183,7 @@ public class Main extends ActionBarActivity {
 
     public void OnClick(View v) {
         if (v.getId() == R.id.closePopup) {
+            //TO-DO: Add something that cleans the screen of popups
 
         }
     }
