@@ -90,8 +90,7 @@ public class Main extends ActionBarActivity {
             }
         });
 
-        Log.println(1, "Var", "Is " + monsterHPInt);
-        Log.println(1, "Method", "Is " + monsterHPObject.getHP());
+        Log.println(1, "Method", "Returns " + monsterHPObject.getHP());
         return monsterHPInt;
 
     }
@@ -127,12 +126,14 @@ public class Main extends ActionBarActivity {
 
                 mobArea.setLongClickable(true);
                 mobArea.setOnLongClickListener(new View.OnLongClickListener() {
+
                     @Override
                     public boolean onLongClick(View v) {
 
                         mobArea.setBackgroundColor(Color.WHITE);
-                        //TO-DO: Wrapper class out of all this bullshit below this line
+                        //TO-DO: Encapsulation class out of all this bullshit below this line
                         textMonsterMaxHP.setText(initPopup(monsterName, monsterMaxHP));
+                        return true;
 
 
                     }});
