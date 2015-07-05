@@ -2,7 +2,6 @@ package com.lorenzmacht.mobhp;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -60,47 +59,14 @@ public class Main extends ActionBarActivity {
         startActivityForResult(intent, 100);
 
     }
-    //This prepares the content of the popup window that's gonna appear once I LongClick a mob
-    public int initPopup(String monsterName, String monsterHP){
-        int monsterHPInt = Integer.parseInt(monsterHP);
-        PopupWindow popup;
-        TextView popupText;
-        Button closePopupButton;
-        SeekBar monsterHPChanger;
 
-        popupText = new TextView(this);
-        popupText.setText(monsterName);
-
-        monsterHPChanger = new SeekBar(this);
-        monsterHPChanger.setMax(monsterHPInt);
-        /** Will only use if necessary
-         *  monsterHPChanger.setProgress(monsterHPChanger.getMax());
-         */
-
-        //Creating wrapper class to edit the monsterHP with the value of the SeekBar
-        final MonsterHP monsterHPObject = new MonsterHP(monsterHPInt, monsterHPChanger.getProgress());
-        closePopupButton = new Button(this);
-        // TO-DO: Define the ID of this thing in a values.xml
-        closePopupButton.setId(R.id.closePopup);
-        closePopupButton.setText("Ok");
-        closePopupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                monsterHPObject.update();
-            }
-        });
-
-        Log.println(1, "Method", "Returns " + monsterHPObject.getHP());
-        return monsterHPInt;
-
-    }
 
     protected void onActivityResult(int requestCode, int returnCode, Intent intent) {
 
         if(requestCode==100) {
 
-            String monsterName = intent.getStringExtra("monsterName");
-            String monsterMaxHP = intent.getStringExtra("monsterMaxHP");
+            final String monsterName = intent.getStringExtra("monsterName");
+            final String monsterMaxHP = intent.getStringExtra("monsterMaxHP");
             if(returnCode == 1001 && !monsterName.equals(null) && monsterMaxHP != null) {
                 // Creating a RelativeLayout inside the layout with 'android:id=@+id/rootlayout'
                 // Commenting out because I'm spawning it in a FrameLayout instead LinearLayout mobsArea = (LinearLayout) findViewById(R.id.mobsarea);
@@ -118,7 +84,7 @@ public class Main extends ActionBarActivity {
                 mobArea.addView(textMonsterName);
                 // TEST mobArea.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
                 // Another TextView for the HP
-                TextView textMonsterMaxHP = new TextView(this);
+                final TextView textMonsterMaxHP = new TextView(this);
                 textMonsterMaxHP.setGravity(Gravity.CENTER);
                 textMonsterMaxHP.setText(monsterMaxHP);
                 mobArea.addView(textMonsterMaxHP);
@@ -178,6 +144,42 @@ public class Main extends ActionBarActivity {
             }
 
         }
+
+    }
+
+    //This prepares the content of the popup window that's gonna appear once I LongClick a mob
+    public int initPopup(String monsterName, String monsterHP){
+        final int monsterHPInt = Integer.parseInt(monsterHP);
+        PopupWindow popup;
+        TextView popupText;
+        Button closePopupButton;
+        final SeekBar monsterHPChanger;
+
+        //TODO: Create the layout of the popup and the popup itself
+
+        popupText = new TextView(this);
+        popupText.setText(monsterName);
+
+        monsterHPChanger = new SeekBar(this);
+        monsterHPChanger.setMax(monsterHPInt);
+        /** Will only use if necessary
+         *  monsterHPChanger.setProgress(monsterHPChanger.getMax());
+         */
+
+        //Creating wrapper class to edit the monsterHP with the value of the SeekBar
+        final MonsterHP monsterHPObject = new MonsterHP(monsterHPInt, monsterHPChanger.getProgress());
+        closePopupButton = new Button(this);
+        closePopupButton.setId(R.id.closePopup);
+        closePopupButton.setText("Ok");
+        closePopupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                monsterHPObject.update(monsterHPChanger.getProgress());
+            }
+        });
+
+        Log.println(1, "Method", "Returns " + monsterHPObject.getHP());
+        return monsterHPObject.getHP();
 
     }
 
