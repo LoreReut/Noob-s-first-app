@@ -154,6 +154,7 @@ public class Main extends ActionBarActivity {
         TextView popupText;
         Button closePopupButton;
         final SeekBar monsterHPChanger;
+        LinearLayout popupLayout;
 
         //TODO: Create the layout of the popup and the popup itself
 
@@ -171,6 +172,10 @@ public class Main extends ActionBarActivity {
         closePopupButton = new Button(this);
         closePopupButton.setId(R.id.closePopup);
         closePopupButton.setText("Ok");
+
+        popupLayout = new LinearLayout(this);
+        LayoutParams plp = new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+
         closePopupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,7 +190,8 @@ public class Main extends ActionBarActivity {
 
     public void OnClick(View v) {
         if (v.getId() == R.id.closePopup) {
-            //TO-DO: Add something that cleans the screen of popups
+            //TO-DO: Add something that cleans the screen of popups. Wait until you have finished
+            //the popup to do this.
 
         }
     }
