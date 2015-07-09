@@ -19,6 +19,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.PopupWindow;
 
+import java.util.logging.Handler;
+
 public class Main extends ActionBarActivity {
 
     @Override
@@ -28,6 +30,7 @@ public class Main extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,7 +105,8 @@ public class Main extends ActionBarActivity {
                         return true;
 
 
-                    }});
+                    }
+                });
 
                 mobArea.setOnTouchListener(new View.OnTouchListener() {
                     @Override
@@ -111,6 +115,13 @@ public class Main extends ActionBarActivity {
                         //Until the end of Else I'm retrieving the action bar height to substract it from the draggedMob
                         TypedValue tv = new TypedValue();
                         int actionBarHeight;
+                        //TODO: SHUTUP stop giving this error!
+                        final Handler handler = new Handler();
+                        final Runnable runnable = new Runnable() {
+                            public void run(){
+                                textMonsterMaxHP.setText(initPopup(monsterName, monsterMaxHP));
+                            }
+                        };
                         if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
                         {
                             actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
@@ -134,6 +145,7 @@ public class Main extends ActionBarActivity {
                                 break;
                             case MotionEvent.ACTION_DOWN:
                                 view.setLayoutParams(params);
+                                handler.postDelayed(runnable,5000);
                                 break;
                         }
                         return true;
@@ -156,8 +168,6 @@ public class Main extends ActionBarActivity {
         final SeekBar monsterHPChanger;
         LinearLayout popupLayout;
 
-        //TODO: Create the layout of the popup and the popup itself
-
         popupText = new TextView(this);
         popupText.setText(monsterName);
 
@@ -167,14 +177,26 @@ public class Main extends ActionBarActivity {
          *  monsterHPChanger.setProgress(monsterHPChanger.getMax());
          */
 
-        //Creating wrapper class to edit the monsterHP with the value of the SeekBar
+        popupLayout = new LinearLayout(this);
+        popupLayout.setOrientation(LinearLayout.VERTICAL);
+        popupLayout.addView(popupText);
+        popupLayout.addView(monsterHPChanger);
+        //TODO: Create the layout of the popup and the popup itself
+        popup = new PopupWindow(popupLayout, LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+        popup.setContentView(popupLayout);
+
+
+        //Creating encapsulation class to edit the monsterHP with the value of the SeekBar
         final MonsterHP monsterHPObject = new MonsterHP(monsterHPInt, monsterHPChanger.getProgress());
         closePopupButton = new Button(this);
         closePopupButton.setId(R.id.closePopup);
         closePopupButton.setText("Ok");
 
-        popupLayout = new LinearLayout(this);
-        LayoutParams plp = new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        /** This is how I attempted to create the popupLayout before
+         *  popupLayout = new LinearLayout(this);
+         *  LayoutParams plp = new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+         */
 
         closePopupButton.setOnClickListener(new View.OnClickListener() {
             @Override
