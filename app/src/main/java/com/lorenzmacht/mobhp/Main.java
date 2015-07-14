@@ -18,8 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.PopupWindow;
-
-import java.util.logging.Handler;
+import android.os.Handler;
 
 public class Main extends ActionBarActivity {
 
@@ -115,11 +114,10 @@ public class Main extends ActionBarActivity {
                         //Until the end of Else I'm retrieving the action bar height to substract it from the draggedMob
                         TypedValue tv = new TypedValue();
                         int actionBarHeight;
-                        //TODO: SHUTUP stop giving this error!
                         final Handler handler = new Handler();
                         final Runnable runnable = new Runnable() {
                             public void run(){
-                                textMonsterMaxHP.setText(initPopup(monsterName, monsterMaxHP));
+                                textMonsterMaxHP.setText(initPopup(monsterName, monsterMaxHP)+"");
                             }
                         };
                         if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
@@ -162,7 +160,7 @@ public class Main extends ActionBarActivity {
     //This prepares the content of the popup window that's gonna appear once I LongClick a mob
     public int initPopup(String monsterName, String monsterHP){
         final int monsterHPInt = Integer.parseInt(monsterHP);
-        PopupWindow popup;
+        final PopupWindow popup;
         TextView popupText;
         Button closePopupButton;
         final SeekBar monsterHPChanger;
@@ -186,30 +184,30 @@ public class Main extends ActionBarActivity {
                 LayoutParams.WRAP_CONTENT);
         popup.setContentView(popupLayout);
 
-
         //Creating encapsulation class to edit the monsterHP with the value of the SeekBar
         final MonsterHP monsterHPObject = new MonsterHP(monsterHPInt, monsterHPChanger.getProgress());
         closePopupButton = new Button(this);
         closePopupButton.setId(R.id.closePopup);
         closePopupButton.setText("Ok");
+        popupLayout.addView(closePopupButton);
 
-        /** This is how I attempted to create the popupLayout before
-         *  popupLayout = new LinearLayout(this);
-         *  LayoutParams plp = new LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-         */
+        popup.showAsDropDown(popupLayout, 0, 0);
 
-        closePopupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                monsterHPObject.update(monsterHPChanger.getProgress());
-            }
-        });
 
-        Log.println(1, "Method", "Returns " + monsterHPObject.getHP());
+
+
+        while (popup.isShowing()) {
+            // TODO: reactivate when debug is done return monsterHPObject.getHP();
+            closePopupButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    monsterHPObject.update(monsterHPChanger.getProgress());
+                    popup.dismiss();
+                }
+            });
+        }
         return monsterHPObject.getHP();
-
     }
-
     public void OnClick(View v) {
         if (v.getId() == R.id.closePopup) {
             //TO-DO: Add something that cleans the screen of popups. Wait until you have finished
