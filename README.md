@@ -5,8 +5,8 @@ Description:  Designed for Dungeon Masters to help them follow the HP the mobs h
 
 To-do list:
 
-```
+
  * [x] Let me print on the main activity the name & max HP of a monster.
  * [x] Let the monsters be draggable.
  * [ ] Let the HP be editable with a tap (preferrably a slider with + and - signs)
-```
+
