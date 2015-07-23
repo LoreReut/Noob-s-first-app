@@ -7,6 +7,6 @@ To-do list:
 
 ```
 [x] Let me print on the main activity the name & max HP of a monster.
-[] Let the monsters be draggable.
+[x] Let the monsters be draggable.
 [] Let the HP be editable with a tap (prferrably a slider with + and - signs)
 ```
