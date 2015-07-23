@@ -19,6 +19,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.PopupWindow;
 import android.os.Handler;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 public class Main extends ActionBarActivity {
 
@@ -92,34 +94,40 @@ public class Main extends ActionBarActivity {
                 mobArea.addView(textMonsterMaxHP);
                 mobArea.setTag("Mob");
 
+
                 mobArea.setLongClickable(true);
-                mobArea.setOnLongClickListener(new View.OnLongClickListener() {
-
-                    @Override
-                    public boolean onLongClick(View v) {
-
-                        mobArea.setBackgroundColor(Color.WHITE);
-                        //TO-DO: Encapsulation class out of all this bullshit below this line
-                        textMonsterMaxHP.setText(initPopup(monsterName, monsterMaxHP));
-                        return true;
-
-
-                    }
-                });
 
                 mobArea.setOnTouchListener(new View.OnTouchListener() {
                     @Override
 
                     public boolean onTouch(View view, MotionEvent me) {
-                        //Until the end of Else I'm retrieving the action bar height to substract it from the draggedMob
+
                         TypedValue tv = new TypedValue();
                         int actionBarHeight;
                         final Handler handler = new Handler();
                         final Runnable runnable = new Runnable() {
                             public void run(){
-                                textMonsterMaxHP.setText(initPopup(monsterName, monsterMaxHP)+"");
+                                AlertDialog.Builder builder = new AlertDialog.Builder(Main.this);
+                                builder.setMessage("Tesuto desu!");
+                                builder.setNegativeButton("Change text to 20", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                        return;
+                                    }
+
+                                })
+                                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    public void onDismiss(DialogInterface dialog) {
+                                        textMonsterMaxHP.setText("20");
+                                    }
+                                });
+                                builder.create().show();
+
+                                //textMonsterMaxHP.setText(initPopup(monsterName, monsterMaxHP)+"");
+
                             }
                         };
+                        //Until the end of Else I'm retrieving the action bar height to substract it from the draggedMob
                         if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
                         {
                             actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
@@ -182,7 +190,7 @@ public class Main extends ActionBarActivity {
         //TODO: Create the layout of the popup and the popup itself
         popup = new PopupWindow(popupLayout, LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT);
-        popup.setContentView(popupLayout);
+
 
         //Creating encapsulation class to edit the monsterHP with the value of the SeekBar
         final MonsterHP monsterHPObject = new MonsterHP(monsterHPInt, monsterHPChanger.getProgress());
@@ -191,10 +199,8 @@ public class Main extends ActionBarActivity {
         closePopupButton.setText("Ok");
         popupLayout.addView(closePopupButton);
 
+        popup.setContentView(popupLayout);
         popup.showAsDropDown(popupLayout, 0, 0);
-
-
-
 
         while (popup.isShowing()) {
             // TODO: reactivate when debug is done return monsterHPObject.getHP();
@@ -207,13 +213,6 @@ public class Main extends ActionBarActivity {
             });
         }
         return monsterHPObject.getHP();
-    }
-    public void OnClick(View v) {
-        if (v.getId() == R.id.closePopup) {
-            //TO-DO: Add something that cleans the screen of popups. Wait until you have finished
-            //the popup to do this.
-
-        }
     }
 
 }
