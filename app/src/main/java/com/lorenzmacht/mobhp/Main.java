@@ -1,36 +1,37 @@
 package com.lorenzmacht.mobhp;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.PopupWindow;
 import android.os.Handler;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 
 public class Main extends ActionBarActivity {
-
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        //Next line is because I couldn't write monsterHPChanger = new SeekBar(this); inside runnable
+        context = this;
         }
+
 
 
     @Override
@@ -74,6 +75,7 @@ public class Main extends ActionBarActivity {
             if(returnCode == 1001 && !monsterName.equals(null) && monsterMaxHP != null) {
                 // Creating a RelativeLayout inside the layout with 'android:id=@+id/rootlayout'
                 // Commenting out because I'm spawning it in a FrameLayout instead LinearLayout mobsArea = (LinearLayout) findViewById(R.id.mobsarea);
+                final TextView doEet;
                 final FrameLayout draggedMobsArea = (FrameLayout) findViewById(R.id.draggedmobsarea);
                 final LinearLayout mobArea = new LinearLayout(this);
                 final LinearLayout rootLayout = (LinearLayout) findViewById(R.id.rootlayout);
@@ -93,6 +95,8 @@ public class Main extends ActionBarActivity {
                 textMonsterMaxHP.setText(monsterMaxHP);
                 mobArea.addView(textMonsterMaxHP);
                 mobArea.setTag("Mob");
+                doEet = new TextView(context);
+                doEet.setText("Sih");
 
 
                 mobArea.setLongClickable(true);
@@ -103,30 +107,74 @@ public class Main extends ActionBarActivity {
                     public boolean onTouch(View view, MotionEvent me) {
 
                         TypedValue tv = new TypedValue();
+
                         int actionBarHeight;
                         final Handler handler = new Handler();
                         final Runnable runnable = new Runnable() {
                             public void run(){
-                                AlertDialog.Builder builder = new AlertDialog.Builder(Main.this);
-                                builder.setMessage("Tesuto desu!");
-                                builder.setNegativeButton("Change text to 20", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.dismiss();
-                                        return;
-                                    }
+                                if (doEet.getText()=="Sih") {
+                                    final SeekBar monsterHPChanger;
+                                    final TextView currentHP;
+                                    LinearLayout ll;
+                                    int intMonsterMaxHP = Integer.parseInt(monsterMaxHP);
+                                    //Creating an AlertDialog
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(Main.this);
 
-                                })
-                                .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    public void onDismiss(DialogInterface dialog) {
-                                        textMonsterMaxHP.setText("20");
-                                    }
-                                });
-                                builder.create().show();
+                                    builder.setMessage("Changing Mob HP");
+                                    //TODO: Create a linear layout with the seekbar in it
+                                    ll = new LinearLayout(context);
+                                    ll.setGravity(Gravity.CENTER);
+                                    ll.setOrientation(LinearLayout.VERTICAL);
+                                    currentHP = new TextView(context);
+                                    currentHP.setText(monsterMaxHP);
+                                    currentHP.setGravity(Gravity.CENTER);
+                                    ll.addView(currentHP);
+                                    monsterHPChanger = new SeekBar(context);
+                                    monsterHPChanger.setMax(intMonsterMaxHP);
+                                    monsterHPChanger.setProgress(intMonsterMaxHP);
+                                    monsterHPChanger.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+                                    ll.addView(monsterHPChanger);
+                                    ll.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-                                //textMonsterMaxHP.setText(initPopup(monsterName, monsterMaxHP)+"");
+                                    builder.setView(ll);
+                                    /** Will only use if necessary
+                                     *  monsterHPChanger.setProgress(monsterHPChanger.getMax());
+                                     */
+                                    builder.setNegativeButton("Set new HP", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                            return;
+                                        }
+
+                                    })
+                                            .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                                public void onDismiss(DialogInterface dialog) {
+                                                    textMonsterMaxHP.setText(monsterHPChanger.getProgress() + "");
+                                                }
+                                            });
+
+                                    monsterHPChanger.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                        public void onStartTrackingTouch(SeekBar sb) {
+
+                                        }
+
+                                        public void onProgressChanged(SeekBar sb, int id, boolean wat) {
+                                            currentHP.setText(monsterHPChanger.getProgress() + "");
+
+                                        }
+
+                                        public void onStopTrackingTouch(SeekBar sb) {
+
+                                        }
+                                    });
+                                    builder.create().show();
+                                } else {return;}
+
 
                             }
                         };
+                        //This variable tells me if I should execute the runnable or not
+
                         //Until the end of Else I'm retrieving the action bar height to substract it from the draggedMob
                         if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
                         {
@@ -148,10 +196,13 @@ public class Main extends ActionBarActivity {
                                 params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop() + actionBarHeight) - rootLayout.getPaddingBottom();
                                 params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2) - draggedMobsArea.getLeft();
                                 view.setLayoutParams(params);
+                                doEet.setText("Noh");
+
                                 break;
                             case MotionEvent.ACTION_DOWN:
                                 view.setLayoutParams(params);
-                                handler.postDelayed(runnable,5000);
+                                doEet.setText("Sih");
+                                handler.postDelayed(runnable,2500);
                                 break;
                         }
                         return true;
@@ -164,55 +215,4 @@ public class Main extends ActionBarActivity {
         }
 
     }
-
-    //This prepares the content of the popup window that's gonna appear once I LongClick a mob
-    public int initPopup(String monsterName, String monsterHP){
-        final int monsterHPInt = Integer.parseInt(monsterHP);
-        final PopupWindow popup;
-        TextView popupText;
-        Button closePopupButton;
-        final SeekBar monsterHPChanger;
-        LinearLayout popupLayout;
-
-        popupText = new TextView(this);
-        popupText.setText(monsterName);
-
-        monsterHPChanger = new SeekBar(this);
-        monsterHPChanger.setMax(monsterHPInt);
-        /** Will only use if necessary
-         *  monsterHPChanger.setProgress(monsterHPChanger.getMax());
-         */
-
-        popupLayout = new LinearLayout(this);
-        popupLayout.setOrientation(LinearLayout.VERTICAL);
-        popupLayout.addView(popupText);
-        popupLayout.addView(monsterHPChanger);
-        //TODO: Create the layout of the popup and the popup itself
-        popup = new PopupWindow(popupLayout, LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT);
-
-
-        //Creating encapsulation class to edit the monsterHP with the value of the SeekBar
-        final MonsterHP monsterHPObject = new MonsterHP(monsterHPInt, monsterHPChanger.getProgress());
-        closePopupButton = new Button(this);
-        closePopupButton.setId(R.id.closePopup);
-        closePopupButton.setText("Ok");
-        popupLayout.addView(closePopupButton);
-
-        popup.setContentView(popupLayout);
-        popup.showAsDropDown(popupLayout, 0, 0);
-
-        while (popup.isShowing()) {
-            // TODO: reactivate when debug is done return monsterHPObject.getHP();
-            closePopupButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    monsterHPObject.update(monsterHPChanger.getProgress());
-                    popup.dismiss();
-                }
-            });
-        }
-        return monsterHPObject.getHP();
-    }
-
 }
