@@ -140,18 +140,19 @@ public class Main extends ActionBarActivity {
                                     /** Will only use if necessary
                                      *  monsterHPChanger.setProgress(monsterHPChanger.getMax());
                                      */
-                                    builder.setNegativeButton("Set new HP", new DialogInterface.OnClickListener() {
+                                    builder.setPositiveButton("Set new HP", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
+                                            textMonsterMaxHP.setText(monsterHPChanger.getProgress()+"");
                                             dialog.dismiss();
                                             return;
                                         }
 
                                     })
-                                            .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                                public void onDismiss(DialogInterface dialog) {
-                                                    textMonsterMaxHP.setText(monsterHPChanger.getProgress() + "");
-                                                }
-                                            });
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
 
                                     monsterHPChanger.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                                         public void onStartTrackingTouch(SeekBar sb) {
