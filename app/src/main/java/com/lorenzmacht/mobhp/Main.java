@@ -74,7 +74,6 @@ public class Main extends ActionBarActivity {
             final String monsterMaxHP = intent.getStringExtra("monsterMaxHP");
             if(returnCode == 1001 && !monsterName.equals(null) && monsterMaxHP != null) {
                 // Creating a RelativeLayout inside the layout with 'android:id=@+id/rootlayout'
-                // Commenting out because I'm spawning it in a FrameLayout instead LinearLayout mobsArea = (LinearLayout) findViewById(R.id.mobsarea);
                 final TextView doEet;
                 final FrameLayout draggedMobsArea = (FrameLayout) findViewById(R.id.draggedmobsarea);
                 final LinearLayout mobArea = new LinearLayout(this);
@@ -211,6 +210,9 @@ public class Main extends ActionBarActivity {
 
                 });
                 
+            }
+            else {
+                return;
             }
 
         }
