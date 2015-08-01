@@ -8,5 +8,5 @@ To do list:
 
  * [x] Let me print on the main activity the name & max HP of a monster.
  * [x] Let the monsters be draggable.
- * [x] Let the HP be editable with a tap (preferrably a slider with + and - signs)
+ * [x] Let the HP be editable
 
