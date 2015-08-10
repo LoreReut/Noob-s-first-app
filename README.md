@@ -9,4 +9,4 @@ To do list:
  * [x] Let me print on the main activity the name & max HP of a monster.
  * [x] Let the monsters be draggable.
  * [x] Let the HP be editable
-
+ * [ ] Let each mob and its HP be saveable for future use.
