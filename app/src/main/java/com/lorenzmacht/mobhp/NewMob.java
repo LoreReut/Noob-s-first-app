@@ -7,8 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 
 public class NewMob extends ActionBarActivity {
@@ -17,6 +15,11 @@ public class NewMob extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_mob);
+        //Hiding the status bar
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+        //Also hiding action bar
+        getSupportActionBar().hide();
 
 
     }
@@ -56,6 +59,17 @@ public class NewMob extends ActionBarActivity {
         intent.putExtra("monsterMaxHP", monsterMaxHP);
         //Using setResult so onActivityResult can detect it
         setResult(1001, intent);
+        finish();
+    }
+
+    public void saveToFile(String monsterName, String monsterHP){
+
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(this, Main.class);
+        setResult(1002, intent);
         finish();
     }
 }
