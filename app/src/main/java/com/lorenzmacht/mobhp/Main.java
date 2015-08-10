@@ -1,5 +1,6 @@
 package com.lorenzmacht.mobhp;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -28,6 +29,8 @@ public class Main extends ActionBarActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Also hiding action bar
+        getSupportActionBar().hide();
         //Next line is because I couldn't write monsterHPChanger = new SeekBar(this); inside runnable
         context = this;
         }
@@ -74,7 +77,6 @@ public class Main extends ActionBarActivity {
             final String monsterMaxHP = intent.getStringExtra("monsterMaxHP");
             if(returnCode == 1001 && !monsterName.equals(null) && monsterMaxHP != null) {
                 // Creating a RelativeLayout inside the layout with 'android:id=@+id/rootlayout'
-                // Commenting out because I'm spawning it in a FrameLayout instead LinearLayout mobsArea = (LinearLayout) findViewById(R.id.mobsarea);
                 final TextView doEet;
                 final FrameLayout draggedMobsArea = (FrameLayout) findViewById(R.id.draggedmobsarea);
                 final LinearLayout mobArea = new LinearLayout(this);
@@ -106,9 +108,7 @@ public class Main extends ActionBarActivity {
 
                     public boolean onTouch(View view, MotionEvent me) {
 
-                        TypedValue tv = new TypedValue();
 
-                        int actionBarHeight;
                         final Handler handler = new Handler();
                         final Runnable runnable = new Runnable() {
                             public void run(){
@@ -121,7 +121,6 @@ public class Main extends ActionBarActivity {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(Main.this);
 
                                     builder.setMessage("Changing Mob HP");
-                                    //TODO: Create a linear layout with the seekbar in it
                                     ll = new LinearLayout(context);
                                     ll.setGravity(Gravity.CENTER);
                                     ll.setOrientation(LinearLayout.VERTICAL);
@@ -140,18 +139,19 @@ public class Main extends ActionBarActivity {
                                     /** Will only use if necessary
                                      *  monsterHPChanger.setProgress(monsterHPChanger.getMax());
                                      */
-                                    builder.setNegativeButton("Set new HP", new DialogInterface.OnClickListener() {
+                                    builder.setPositiveButton("Set new HP", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
+                                            textMonsterMaxHP.setText(monsterHPChanger.getProgress()+"");
                                             dialog.dismiss();
                                             return;
                                         }
 
                                     })
-                                            .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                                public void onDismiss(DialogInterface dialog) {
-                                                    textMonsterMaxHP.setText(monsterHPChanger.getProgress() + "");
-                                                }
-                                            });
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.dismiss();
+                                        }
+                                    });
 
                                     monsterHPChanger.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                                         public void onStartTrackingTouch(SeekBar sb) {
@@ -175,25 +175,17 @@ public class Main extends ActionBarActivity {
                         };
                         //This variable tells me if I should execute the runnable or not
 
-                        //Until the end of Else I'm retrieving the action bar height to substract it from the draggedMob
-                        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-                        {
-                            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
-                        }
-                        else
-                        {
-                            actionBarHeight = 0;
-                        }
+
                         LayoutParams params = (LayoutParams) view.getLayoutParams();
                         int action = me.getAction();
                         switch (action) {
                             case MotionEvent.ACTION_MOVE:
-                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop() + actionBarHeight) - rootLayout.getPaddingBottom();
+                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop()) - rootLayout.getPaddingBottom();
                                 params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2) - draggedMobsArea.getLeft();
                                 view.setLayoutParams(params);
                                 break;
                             case MotionEvent.ACTION_UP:
-                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop() + actionBarHeight) - rootLayout.getPaddingBottom();
+                                params.topMargin = (int) me.getRawY() - (view.getHeight() / 2) - (draggedMobsArea.getTop()) - rootLayout.getPaddingBottom();
                                 params.leftMargin = (int) me.getRawX() - (view.getWidth() / 2) - draggedMobsArea.getLeft();
                                 view.setLayoutParams(params);
                                 doEet.setText("Noh");
@@ -210,6 +202,9 @@ public class Main extends ActionBarActivity {
 
                 });
                 
+            }
+            else {
+                return;
             }
 
         }

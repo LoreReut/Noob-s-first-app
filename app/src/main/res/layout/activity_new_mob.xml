@@ -9,7 +9,19 @@
     android:gravity="top|center">
     <EditText android:id="@+id/monster_name" android:hint="@string/mob_name_here" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
     <EditText android:id="@+id/monster_MaxHP" android:hint="Max HP" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-    <Button android:text="@string/print_mob" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:onClick="returnToMain" />
-
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:text="@string/print_mob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="returnToMain" />
+        <Button
+            android:text="Save Mob Placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="saveToFile"/>
+    </LinearLayout>
 </LinearLayout>
