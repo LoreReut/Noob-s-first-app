@@ -1,5 +1,6 @@
 package com.lorenzmacht.mobhp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -10,7 +11,8 @@ import android.widget.EditText;
 
 
 public class NewMob extends ActionBarActivity {
-
+    //I made this variable because I can't use getContext() for some reason
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +22,7 @@ public class NewMob extends ActionBarActivity {
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         //Also hiding action bar
         getSupportActionBar().hide();
-
+        context = this;
 
     }
 
@@ -63,7 +65,7 @@ public class NewMob extends ActionBarActivity {
     }
 
     public void saveToFile(String monsterName, String monsterHP){
-
+        FeedReaderDbHelper reader = new FeedReaderDbHelper(context);
     }
 
     @Override
