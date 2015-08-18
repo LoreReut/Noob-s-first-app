@@ -41,6 +41,11 @@ public class MonstersDataSource {
         return monster;
     }
 
+    public void deleteRandomMonster() {
+        //Some basic deleting function so it doesn't clog up
+        //the view.
+    }
+
     public List<Monster> getAllMonsters() {
         List<Monster> monsterList = new ArrayList<Monster>();
 
@@ -58,6 +63,7 @@ public class MonstersDataSource {
 
     private Monster cursorToMonster(Cursor cursor) {
         Monster monster = new Monster();
+        while (cursor.getPosition() < 0) {cursor.moveToFirst();}
         monster.setId(cursor.getLong(0));
         monster.setMonsterName(cursor.getString(1));
         monster.setMonsterMaxHP(cursor.getInt(2));
