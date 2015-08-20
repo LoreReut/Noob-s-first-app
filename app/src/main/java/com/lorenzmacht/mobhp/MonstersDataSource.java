@@ -57,13 +57,13 @@ public class MonstersDataSource {
             monsterList.add(monster);
             cursor.moveToNext();
         }
-        cursor.close();
+            cursor.close();
         return monsterList;
     }
 
     private Monster cursorToMonster(Cursor cursor) {
         Monster monster = new Monster();
-        while (cursor.getPosition() < 0) {cursor.moveToFirst();}
+        if (cursor.getPosition() < 0) {cursor.moveToFirst();}
         monster.setId(cursor.getLong(0));
         monster.setMonsterName(cursor.getString(1));
         monster.setMonsterMaxHP(cursor.getInt(2));
