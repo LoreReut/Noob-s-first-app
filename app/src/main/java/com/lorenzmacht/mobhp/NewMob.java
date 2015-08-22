@@ -31,9 +31,8 @@ public class NewMob extends ListActivity {
         dataSource.open();
 
         List<Monster> monsters = dataSource.getAllMonsters();
-        ArrayAdapter<Monster> adapter = new ArrayAdapter<Monster>(this, android.R.layout.simple_list_item_1, monsters);
+        ArrayAdapter<Monster> adapter = new ArrayAdapter<Monster>(this, R.layout.simple_centered_list_item_1, monsters);
         setListAdapter(adapter);
-
         //Hiding the status bar
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
