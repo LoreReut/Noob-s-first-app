@@ -17,9 +17,9 @@
             android:text="@string/print_mob"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="returnToMain" />
+            android:onClick="returnToMain"/>
         <Button
-            android:text="Save Mob Placeholder"
+            android:text="Save Mob (Placeholder)"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="saveToFile"/>
