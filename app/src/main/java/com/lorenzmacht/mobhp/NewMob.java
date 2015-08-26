@@ -7,11 +7,15 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import java.util.List;
 
@@ -44,6 +48,23 @@ public class NewMob extends ListActivity {
          */
 
         context = this;
+
+        ListView list = getListView();
+        list.setOnItemClickListener(new OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long arg4)
+            {
+                Monster monster = dataSource.getMonster(position+1);
+                Log.e("ListView", "Works, clicked monster:" + monster.getMonsterName());
+                EditText editName = (EditText) findViewById(R.id.monster_name);
+                EditText editHP = (EditText) findViewById(R.id.monster_MaxHP);
+                editName.setText(monster.getMonsterName());
+                editHP.setText(monster.getMonsterMaxHP() + "");
+            }
+
+
+        });
 
     }
 

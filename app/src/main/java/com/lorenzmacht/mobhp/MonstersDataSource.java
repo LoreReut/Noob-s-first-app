@@ -41,6 +41,18 @@ public class MonstersDataSource {
         return monster;
     }
 
+    public Monster getMonster(int position) {
+        Cursor cursor;
+        //NOT NEEDED FOR NOW String[] nameAndHP = {MySQLiteHelper.COLUMN_NAME, MySQLiteHelper.COLUMN_MAXHP};
+        long positionLong = position;
+
+        cursor = db.query(MySQLiteHelper.TABLE_MONSTERS, allColumns, MySQLiteHelper.COLUMN_ID + " = " + positionLong, null, null, null, null);
+
+        Monster monster = cursorToMonster(cursor);
+        cursor.close();
+        return monster;
+    }
+
     public void deleteRandomMonster() {
         //Some basic deleting function so it doesn't clog up
         //the view.
