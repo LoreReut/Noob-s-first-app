@@ -23,6 +23,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="saveToFile"/>
+        <Button
+            android:text="Delete Mob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="deleteMob"/>
     </LinearLayout>
     <ListView
         android:id="@android:id/list"

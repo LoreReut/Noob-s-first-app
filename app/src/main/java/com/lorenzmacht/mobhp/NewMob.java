@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class NewMob extends ListActivity {
         dataSource.open();
 
         List<Monster> monsters = dataSource.getAllMonsters();
-        ArrayAdapter<Monster> adapter = new ArrayAdapter<Monster>(this, R.layout.simple_centered_list_item_1, monsters);
+        final ArrayAdapter<Monster> adapter = new ArrayAdapter<Monster>(this, R.layout.simple_centered_list_item_1, monsters);
         setListAdapter(adapter);
         //Hiding the status bar
         View decorView = getWindow().getDecorView();
@@ -55,15 +56,15 @@ public class NewMob extends ListActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View view, int position, long arg4)
             {
-                Monster monster = dataSource.getMonster(position+1);
-                Log.e("ListView", "Works, clicked monster:" + monster.getMonsterName());
+                Object o = adapter.getItem(position);
+                String oText = o.toString();
+                Log.e("ListView", "Works, clicked monster: " + oText);
+                Monster monster = dataSource.getMonster(oText);
                 EditText editName = (EditText) findViewById(R.id.monster_name);
                 EditText editHP = (EditText) findViewById(R.id.monster_MaxHP);
                 editName.setText(monster.getMonsterName());
                 editHP.setText(monster.getMonsterMaxHP() + "");
             }
-
-
         });
 
     }
@@ -121,6 +122,17 @@ public class NewMob extends ListActivity {
         monster = dataSource.insertMonster(monsterName, monsterMaxHP);
         adapter.add(monster);
 
+    }
+
+    public void deleteMob(View view) {
+        EditText editName = (EditText) findViewById(R.id.monster_name);
+        dataSource.deleteMonster(editName.getText().toString());
+
+        CharSequence toastText = editName.getText().toString() + " deleted. Mob will not be shown next time.";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, toastText, duration);
+        toast.show();
     }
 
     @Override

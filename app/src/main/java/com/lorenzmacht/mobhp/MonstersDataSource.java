@@ -41,21 +41,19 @@ public class MonstersDataSource {
         return monster;
     }
 
-    public Monster getMonster(int position) {
+    public Monster getMonster(String monsterName) {
         Cursor cursor;
         //NOT NEEDED FOR NOW String[] nameAndHP = {MySQLiteHelper.COLUMN_NAME, MySQLiteHelper.COLUMN_MAXHP};
-        long positionLong = position;
 
-        cursor = db.query(MySQLiteHelper.TABLE_MONSTERS, allColumns, MySQLiteHelper.COLUMN_ID + " = " + positionLong, null, null, null, null);
+        cursor = db.query(MySQLiteHelper.TABLE_MONSTERS, allColumns, MySQLiteHelper.COLUMN_NAME + " = '" + monsterName + "'", null, null, null, null);
 
         Monster monster = cursorToMonster(cursor);
         cursor.close();
         return monster;
     }
 
-    public void deleteRandomMonster() {
-        //Some basic deleting function so it doesn't clog up
-        //the view.
+    public void deleteMonster(String monsterName) {
+        db.delete(MySQLiteHelper.TABLE_MONSTERS, MySQLiteHelper.COLUMN_NAME + " = '" + monsterName + "'", null);
     }
 
     public List<Monster> getAllMonsters() {
