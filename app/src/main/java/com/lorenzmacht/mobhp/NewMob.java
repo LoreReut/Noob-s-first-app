@@ -7,11 +7,16 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -31,7 +36,7 @@ public class NewMob extends ListActivity {
         dataSource.open();
 
         List<Monster> monsters = dataSource.getAllMonsters();
-        ArrayAdapter<Monster> adapter = new ArrayAdapter<Monster>(this, R.layout.simple_centered_list_item_1, monsters);
+        final ArrayAdapter<Monster> adapter = new ArrayAdapter<Monster>(this, R.layout.simple_centered_list_item_1, monsters);
         setListAdapter(adapter);
         //Hiding the status bar
         View decorView = getWindow().getDecorView();
@@ -44,6 +49,23 @@ public class NewMob extends ListActivity {
          */
 
         context = this;
+
+        ListView list = getListView();
+        list.setOnItemClickListener(new OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View view, int position, long arg4)
+            {
+                Object o = adapter.getItem(position);
+                String oText = o.toString();
+                Log.e("ListView", "Works, clicked monster: " + oText);
+                Monster monster = dataSource.getMonster(oText);
+                EditText editName = (EditText) findViewById(R.id.monster_name);
+                EditText editHP = (EditText) findViewById(R.id.monster_MaxHP);
+                editName.setText(monster.getMonsterName());
+                editHP.setText(monster.getMonsterMaxHP() + "");
+            }
+        });
 
     }
 
@@ -100,6 +122,17 @@ public class NewMob extends ListActivity {
         monster = dataSource.insertMonster(monsterName, monsterMaxHP);
         adapter.add(monster);
 
+    }
+
+    public void deleteMob(View view) {
+        EditText editName = (EditText) findViewById(R.id.monster_name);
+        dataSource.deleteMonster(editName.getText().toString());
+
+        CharSequence toastText = editName.getText().toString() + " deleted. Mob will not be shown next time.";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, toastText, duration);
+        toast.show();
     }
 
     @Override
