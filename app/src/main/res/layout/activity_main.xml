@@ -19,7 +19,11 @@
             android:text="Create Mobs"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:onClick="openMobActivity"/>
+            android:onClick="openMobActivity"
+
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/button"/>
     </LinearLayout>
 
     <LinearLayout

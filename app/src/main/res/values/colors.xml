@@ -2,4 +2,5 @@
 <resources>
     <color name="brown">#FF996633</color>
     <color name="darkBrown">#FF663300</color>
+    <color name="lighterBrown">#FF7C4600</color>
 </resources>
